@@ -1,0 +1,220 @@
+#!/usr/bin/env python
+import sys
+import os
+import threading
+import time
+
+import cv2 as cv
+import torch
+import numpy as np
+import rospy
+import rospkg
+from skimage import io
+# import some common detectron2 utilities
+import detectron2.data.transforms as T
+from detectron2.checkpoint import DetectionCheckpointer
+from detectron2.modeling import build_model
+from detectron2.data import MetadataCatalog
+from detectron2.utils.logger import setup_logger
+from detectron2.utils.visualizer import ColorMode,Visualizer
+from detectron2.structures.instances import Instances
+
+from airdet_ros.msg import Result
+from sensor_msgs.msg import Image, RegionOfInterest
+
+rospack = rospkg.RosPack()
+pack_path = rospack.get_path('airdet_ros')
+airdetpath = os.path.join(pack_path,'airdet')
+sys.path.append(pack_path)
+sys.path.append(airdetpath)
+# import fewx special utilities
+from airdet.fewx.config import get_cfg
+from airdet.fewx.data.build import build_detection_test_loader
+from cv_bridge import CvBridge, CvBridgeError
+
+def save_image(image_dicts, input_image_name, network='AirShot-101', output_dir=os.path.join(pack_path, '/results')):
+    if not os.path.isdir(output_dir):
+        os.makedirs(output_dir)
+    prefix = os.path.splitext(input_image_name)[0]
+    for key, image in image_dicts.items():
+        io.imsave(os.path.join(output_dir, '{}-{}-{}.jpg'.format(prefix, network, key)), image)
+    
+def Visualize(im, output, train_metadata):
+    meta = train_metadata
+    # meta.thing_colors = []
+    for i in range(len(train_metadata.thing_classes)):
+        # meta.thing_colors.append([0,255,0])
+        meta.thing_colors[i] = [0,255,0]
+    v = Visualizer(im[:, :, ::-1],
+                metadata=meta,
+                scale=1,
+                instance_mode=ColorMode.SEGMENTATION
+                 )
+    all_instances = output["instances"].to("cpu")
+        # Top K mode
+    draw_instances =  Instances(all_instances.image_size)
+    draw_instances.pred_boxes = all_instances.pred_boxes[0:]
+    draw_instances.scores = all_instances.scores[0:]
+    draw_instances.pred_classes = all_instances.pred_classes[0:]
+    out = v.draw_instance_predictions(draw_instances)
+    return out.get_image()[:, :, ::-1]
+
+
+class AirDetNode(object):
+    def __init__(self):
+        rospy.logwarn("Initializing")
+        setup_logger()
+
+        self._bridge = CvBridge()
+        self._last_msg = None
+        self._msg_lock = threading.Lock()
+        self._image_counter = 0
+
+        self.cfg = get_cfg()
+        self.cfg.merge_from_file(self.load_param('~config'))
+        # build_detection_test_loader(self.cfg, self.cfg.DATASETS.TEST[0])
+        self.metadata = MetadataCatalog.get(self.cfg.DATASETS.TEST[0])
+        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = self.load_param('~detection_threshold') # set threshold for this model
+        self.cfg.MODEL.WEIGHTS = self.load_param('~model')
+        self.model = build_model(self.cfg)
+        self.predictor = DetectionCheckpointer(self.model)
+        self.predictor.load(self.cfg.MODEL.WEIGHTS)
+        self.model.eval()
+        self.model.zero_grad()
+        self.model.init_model()
+        self._class_names = MetadataCatalog.get(self.cfg.DATASETS.TEST[0]).get("thing_classes", None)
+
+        self._visualization = self.load_param('~visualization',True)
+        self._result_pub = rospy.Publisher('~result', Result, queue_size=1)
+        self._vis_pub = rospy.Publisher('~visualization', Image, queue_size=1)
+        self._sub = rospy.Subscriber(self.load_param('~input'), Image, self.callback_image, queue_size=1)
+        self.us_time = 0
+        rospy.logwarn("Initialized")
+
+    def run(self):
+
+        rate = rospy.Rate(100)
+        while not rospy.is_shutdown():
+            if self._msg_lock.acquire(False):
+                img_msg = self._last_msg
+                self._last_msg = None
+                self._msg_lock.release()
+            else:
+                rate.sleep()
+                continue
+
+            if img_msg is not None:
+                self._image_counter = self._image_counter + 1
+                # pre-process image
+                original_image = self.convert_to_cv_image(img_msg)
+                height, width = original_image.shape[:2]
+                transform_gen = T.ResizeShortestEdge(
+                    [self.cfg.INPUT.MIN_SIZE_TEST, self.cfg.INPUT.MIN_SIZE_TEST], self.cfg.INPUT.MAX_SIZE_TEST
+                )
+                image = transform_gen.get_transform(original_image).apply_image(original_image)
+                image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1)).requires_grad_(False)
+                inputs = {"image": image, "height": height, "width": width}
+
+                curren_time = time.time()
+                outputs = self.model([inputs])[0] 
+                delta = time.time() - curren_time
+                self.us_time += delta
+                if (self._image_counter % 10) == 0:
+                    rospy.loginfo("Images detected per second=%.2f",
+                                  float(self._image_counter) / self.us_time)
+                result = outputs["instances"].to("cpu")
+                result_msg = self.getResult(result)
+
+                self._result_pub.publish(result_msg)
+
+                # Visualize results
+                if self._visualization:
+                    im = original_image[..., ::-1]
+                    img = Visualize(im,outputs,self.metadata)
+                    ms_img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+                    image_msg = self._bridge.cv2_to_imgmsg(ms_img)
+                    self._vis_pub.publish(image_msg)
+                    image_dict = {}
+                    image_dict['im_pred_box'] = img
+                    #save_image(image_dict, "{}.jpg".format(self._image_counter))
+
+            rate.sleep()
+
+    def getResult(self, predictions):
+
+        boxes = predictions.pred_boxes if predictions.has("pred_boxes") else None
+
+        if predictions.has("pred_masks"):
+            masks = np.asarray(predictions.pred_masks)
+        # else:
+        #     return
+
+        result_msg = Result()
+        result_msg.header = self._header
+        result_msg.class_ids = predictions.pred_classes if predictions.has("pred_classes") else None
+        result_msg.class_names = np.array(self._class_names)[result_msg.class_ids.numpy()]
+        result_msg.scores = predictions.scores if predictions.has("scores") else None
+
+        for i, (x1, y1, x2, y2) in enumerate(boxes):
+            # mask = np.zeros(masks[i].shape, dtype="uint8")
+            # mask[masks[i, :, :]]=255
+            # mask = self._bridge.cv2_to_imgmsg(mask)
+            # result_msg.masks.append(mask)
+
+            box = RegionOfInterest()
+            box.x_offset = np.uint32(x1)
+            box.y_offset = np.uint32(y1)
+            box.height = np.uint32(y2 - y1)
+            box.width = np.uint32(x2 - x1)
+            result_msg.boxes.append(box)
+
+        return result_msg
+
+    def convert_to_cv_image(self, image_msg):
+
+        if image_msg is None:
+            return None
+
+        self._width = image_msg.width
+        self._height = image_msg.height
+        channels = int(len(image_msg.data) / (self._width * self._height))
+
+        encoding = None
+        if image_msg.encoding.lower() in ['rgb8', 'bgr8']:
+            encoding = np.uint8
+        elif image_msg.encoding.lower() == 'mono8':
+            encoding = np.uint8
+        elif image_msg.encoding.lower() == '32fc1':
+            encoding = np.float32
+            channels = 1
+
+        cv_img = np.ndarray(shape=(image_msg.height, image_msg.width, channels),
+                            dtype=encoding, buffer=image_msg.data)
+
+        if image_msg.encoding.lower() == 'mono8':
+            cv_img = cv.cvtColor(cv_img, cv.COLOR_RGB2GRAY)
+        else:
+            cv_img = cv.cvtColor(cv_img, cv.COLOR_RGB2BGR)
+
+        return cv_img
+
+    def callback_image(self, msg):
+        rospy.logdebug("Get an image")
+        if self._msg_lock.acquire(False):
+            self._last_msg = msg
+            self._header = msg.header
+            self._msg_lock.release()
+
+    @staticmethod
+    def load_param(param, default=None):
+        new_param = rospy.get_param(param, default)
+        rospy.loginfo("[Detectron2] %s: %s", param, new_param)
+        return new_param
+
+def main(argv):
+    rospy.init_node('airdet_ros')
+    node = AirDetNode()
+    node.run()
+
+if __name__ == '__main__':
+    main(sys.argv)

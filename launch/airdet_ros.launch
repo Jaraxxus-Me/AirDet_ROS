@@ -1,0 +1,17 @@
+<launch>
+  <arg name="input" default="/rs_back/color/image" />
+  <arg name="detection_threshold" default="0.92" />
+  <arg name="config" default="$(find airdet_ros)/airdet/configs/fsod/test_R_101_subt3_final.yaml" />
+  <arg name="model" default="$(find airdet_ros)/airdet/pretrained_models/model_final.pth" />
+  <arg name="visualization" default="true" />
+
+  <node name="airdet_ros"  pkg="airdet_ros" type="airdet_ros" output="screen" >
+    <param name="input" value="$(arg input)" />
+    <param name="detection_threshold" value="$(arg detection_threshold)" />
+    <param name="config" value="$(arg config)" />
+    <param name="model" value="$(arg model)" />
+    <param name="visualization" value="$(arg visualization)" />
+  </node>
+
+  <node name="rviz"  pkg="rviz" type="rviz" args="-d $(find airdet_ros)/rviz/default.rviz" required="true" />
+</launch>

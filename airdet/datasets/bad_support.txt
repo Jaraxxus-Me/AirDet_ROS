@@ -1,0 +1,8 @@
+3 shot
+['val_a_1.json', 'val_c_8.json', 'val_e_12.json', 'val_e_14.json', 'val_f_2.json', 'val_f_12.json', 'val_f_13.json', 'val_f_15.json', 'val_f_17.json', 'val_f_19.json', 'val_f_21.json', 'val_f_22.json', 'val_f_27.json', 'val_f_28.json', 'val_f_29.json', 'val_g_41.json', 'val_g_42.json', 'val_g_55.json', 'val_g_59.json', 'val_g_60.json', 'val_g_62.json', 'val_g_64.json', 'val_g_65.json', 'val_g_80.json', 'val_g_82.json', 'val_g_101.json', 'val_g_113.json', 'val_g_114.json', 'val_g_118.json', 'val_g_119.json', 'val_g_121.json', 'val_g_124.json', 'val_g_126.json', 'val_g_129.json', 'val_g_132.json', 'val_h_15.json', 'val_h_43.json', 'val_h_55.json']
+
+2 shot
+['val_a_1.json', 'val_e_14.json', 'val_f_2.json', 'val_f_12.json', 'val_f_13.json', 'val_f_15.json', 'val_f_17.json', 'val_f_19.json', 'val_f_21.json', 'val_f_22.json', 'val_f_27.json', 'val_f_28.json', 'val_g_41.json', 'val_g_42.json', 'val_g_55.json', 'val_g_59.json', 'val_g_60.json', 'val_g_62.json', 'val_g_64.json', 'val_g_65.json', 'val_g_80.json', 'val_g_82.json', 'val_g_101.json', 'val_g_113.json', 'val_g_114.json', 'val_g_118.json', 'val_g_119.json', 'val_g_121.json', 'val_g_124.json', 'val_g_126.json', 'val_g_129.json', 'val_g_132.json', 'val_h_15.json', 'val_h_43.json', 'val_h_55.json']
+
+1 shot
+['val_a_1.json', 'val_f_2.json', 'val_f_12.json', 'val_f_15.json', 'val_f_17.json', 'val_f_21.json', 'val_f_22.json', 'val_f_28.json', 'val_g_42.json', 'val_g_55.json', 'val_g_59.json', 'val_g_60.json', 'val_g_62.json', 'val_g_64.json', 'val_g_65.json', 'val_g_80.json', 'val_g_82.json', 'val_g_101.json', 'val_g_113.json', 'val_g_114.json', 'val_g_118.json', 'val_g_119.json', 'val_g_121.json', 'val_g_124.json', 'val_g_126.json', 'val_g_129.json', 'val_g_132.json']

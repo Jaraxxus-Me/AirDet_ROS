@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // python -m debugpy --listen 0.0.0.0:5681 --wait-for-client new_df.py
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Remote Attach",
+            "type": "python",
+            "request": "attach",                       // Tells debugger to attach to a running instance
+            "connect": {
+                "host": "roberto",                     // The machine you are debugging on
+                "port": 5681                          // Which port is used as the debugging port
+            },
+            "pathMappings": [                          // Local<->remote file path correspondence, usually
+                {                                      // depends on how you mount files when 'docker run'
+                    "localRoot": "${workspaceFolder}", // e.g. bender:$remoteRoot/module/source.py
+                    "remoteRoot": "/home/user/ws/FewX/SUBT/final_circuit/datasets"     //   == perceptron:$localRoot/module/source.py
+                }                                      // Will fail to set breakpoint if wrong
+            ],
+            "justMyCode": false                        // Optional, personally find helpful
+        }
+
+    ]
+}

@@ -1,0 +1,17 @@
+mv use/val_c_0 use/bad/
+mv use/val_c_1 use/bad/
+mv use/val_c_6 use/bad/
+mv use/val_c_8 use/bad/
+mv use/val_c_12 use/bad/
+mv use/val_d_0 use/bad/
+mv use/val_e_10 use/bad/
+mv use/val_e_13 use/bad/
+mv use/val_e_15 use/bad/
+mv use/val_f_3 use/bad/
+mv use/val_f_4 use/bad/
+mv use/val_f_8 use/bad/
+mv use/val_f_24 use/bad/
+mv use/val_f_24 use/bad/
+mv use/val_f_25 use/bad/
+mv use/val_g_51 use/bad/
+mv use/val_g_60 use/bad/

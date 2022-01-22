@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>airdet_ros</name>
+  <version>0.1.0</version>
+  <description>The airdet_ros package</description>
+
+  <maintainer email="bowenli1024@gmail.com">Bowen Li</maintainer>
+
+  <license>MIT</license>
+
+  <url type="website">https://github.com/DavidFernandezChaves/airdet_ros</url>
+
+  <author email="bowenli1024@gmail.com">Bowen Li</author>
+  <author>Bowen Li</author>
+
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rospy</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>message_runtime</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
+
+
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

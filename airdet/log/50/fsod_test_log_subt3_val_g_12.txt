@@ -1,0 +1,875 @@
+Command Line Args: Namespace(config_file='configs/fsod/finetune_R_50_C4_1x_subt3.yaml', dist_url='tcp://127.0.0.1:49152', eval_only=True, machine_rank=0, num_gpus=1, num_machines=1, opts=['MODEL.WEIGHTS', './output/50_old/R_50_C4_1x/model_final.pth', 'DATASETS.TEST', "('val_g_12',)"], resume=False)
+[32m[11/16 13:20:08 detectron2]: [0mRank of current process: 0. World size: 1
+[32m[11/16 13:20:09 detectron2]: [0mEnvironment info:
+----------------------  ---------------------------------------------------------------------------------------
+sys.platform            linux
+Python                  3.6.9 |Anaconda, Inc.| (default, Jul 30 2019, 19:07:31) [GCC 7.3.0]
+numpy                   1.19.2
+detectron2              0.2 @/usr/local/miniconda/envs/fewx/lib/python3.6/site-packages/detectron2
+Compiler                GCC 7.3
+CUDA compiler           CUDA 10.2
+detectron2 arch flags   sm_35, sm_37, sm_50, sm_52, sm_60, sm_61, sm_70, sm_75
+DETECTRON2_ENV_MODULE   <not set>
+PyTorch                 1.5.1 @/usr/local/miniconda/envs/fewx/lib/python3.6/site-packages/torch
+PyTorch debug build     False
+GPU available           True
+GPU 0                   Tesla P100-SXM2-16GB
+CUDA_HOME               /usr/local/cuda
+Pillow                  8.3.1
+torchvision             0.6.0a0+35d732a @/usr/local/miniconda/envs/fewx/lib/python3.6/site-packages/torchvision
+torchvision arch flags  sm_35, sm_50, sm_60, sm_70, sm_75
+fvcore                  0.1.5.post20210825
+cv2                     4.2.0
+----------------------  ---------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v0.21.1 (Git Hash 7d2fd500bc78936d1d648ca713b901012f470dbc)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 10.2
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 7.6.5
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_INTERNAL_THREADPOOL_IMPL -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_STATIC_DISPATCH=OFF, 
+
+[32m[11/16 13:20:09 detectron2]: [0mCommand line arguments: Namespace(config_file='configs/fsod/finetune_R_50_C4_1x_subt3.yaml', dist_url='tcp://127.0.0.1:49152', eval_only=True, machine_rank=0, num_gpus=1, num_machines=1, opts=['MODEL.WEIGHTS', './output/50_old/R_50_C4_1x/model_final.pth', 'DATASETS.TEST', "('val_g_12',)"], resume=False)
+[32m[11/16 13:20:09 detectron2]: [0mContents of args.config_file=configs/fsod/finetune_R_50_C4_1x_subt3.yaml:
+_BASE_: "Base-FSOD-C4.yaml"
+MODEL:
+  WEIGHTS: "./output/fsod/R_50_C4_1x/model_final.pth" 
+  MASK_ON: False
+  RESNETS:
+    DEPTH: 50
+    OUT_FEATURES: ["res2", "res3", "res4"]
+  BACKBONE:
+    FREEZE_AT: 5
+DATASETS:
+  TRAIN: ("coco_2017_train_voc_10_shot",)
+  TEST: ("val_a_0",)
+  TESTSHOTS: 3
+SOLVER:
+  IMS_PER_BATCH: 4
+  BASE_LR: 0.0
+  STEPS: (2000, 3000)
+  MAX_ITER: 3000
+  WARMUP_ITERS: 200
+INPUT:
+  FS:
+    FEW_SHOT: True
+    SUPPORT_WAY: 2
+    SUPPORT_SHOT: 1
+  MIN_SIZE_TRAIN: (440, 472, 504, 536, 568, 600)
+  MAX_SIZE_TRAIN: 1000
+  MIN_SIZE_TEST: 600
+  MAX_SIZE_TEST: 1000
+OUTPUT_DIR: './output/fsod/test_dir/R_101_C4_1x_subt/3shot'
+
+[32m[11/16 13:20:09 detectron2]: [0mRunning with full config:
+CUDNN_BENCHMARK: False
+DATALOADER:
+  ASPECT_RATIO_GROUPING: True
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 8
+  REPEAT_THRESHOLD: 0.0
+  SAMPLER_TRAIN: TrainingSampler
+DATASETS:
+  PRECOMPUTED_PROPOSAL_TOPK_TEST: 1000
+  PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
+  PROPOSAL_FILES_TEST: ()
+  PROPOSAL_FILES_TRAIN: ()
+  TEST: ('val_g_12',)
+  TESTSHOTS: 3
+  TRAIN: ('coco_2017_train_voc_10_shot',)
+GLOBAL:
+  HACK: 1.0
+INPUT:
+  CROP:
+    ENABLED: False
+    SIZE: [0.9, 0.9]
+    TYPE: relative_range
+  FORMAT: BGR
+  FS:
+    FEW_SHOT: True
+    SUPPORT_SHOT: 1
+    SUPPORT_WAY: 2
+  MASK_FORMAT: polygon
+  MAX_SIZE_TEST: 1000
+  MAX_SIZE_TRAIN: 1000
+  MIN_SIZE_TEST: 600
+  MIN_SIZE_TRAIN: (440, 472, 504, 536, 568, 600)
+  MIN_SIZE_TRAIN_SAMPLING: choice
+MODEL:
+  ANCHOR_GENERATOR:
+    ANGLES: [[-90, 0, 90]]
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]
+    NAME: DefaultAnchorGenerator
+    OFFSET: 0.0
+    SIZES: [[32, 64, 128, 256, 512]]
+  BACKBONE:
+    FREEZE_AT: 5
+    NAME: build_resnet_backbone
+  DEVICE: cuda
+  FPN:
+    FUSE_TYPE: sum
+    IN_FEATURES: []
+    NORM: 
+    OUT_CHANNELS: 256
+  HIFT:
+    CHANNEL: 256
+    DIM_FFN: 512
+    HEADS: 4
+    LAYERS_DEC: 2
+    LAYERS_ENC: 1
+  KEYPOINT_ON: False
+  LOAD_PROPOSALS: False
+  MASK_ON: False
+  META_ARCHITECTURE: FsodRCNN
+  PANOPTIC_FPN:
+    COMBINE:
+      ENABLED: True
+      INSTANCES_CONFIDENCE_THRESH: 0.5
+      OVERLAP_THRESH: 0.5
+      STUFF_AREA_LIMIT: 4096
+    INSTANCE_LOSS_WEIGHT: 1.0
+  PIXEL_MEAN: [103.53, 116.28, 123.675]
+  PIXEL_STD: [1.0, 1.0, 1.0]
+  PROPOSAL_GENERATOR:
+    MIN_SIZE: 0
+    NAME: FsodRPN
+  RESNETS:
+    DEFORM_MODULATED: False
+    DEFORM_NUM_GROUPS: 1
+    DEFORM_ON_PER_STAGE: [False, False, False, False]
+    DEPTH: 50
+    NORM: FrozenBN
+    NUM_GROUPS: 1
+    OUT_FEATURES: ['res2', 'res3', 'res4']
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 1
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: True
+    WIDTH_PER_GROUP: 64
+  RETINANET:
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    FOCAL_LOSS_ALPHA: 0.25
+    FOCAL_LOSS_GAMMA: 2.0
+    IN_FEATURES: ['p3', 'p4', 'p5', 'p6', 'p7']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.4, 0.5]
+    NMS_THRESH_TEST: 0.5
+    NUM_CLASSES: 80
+    NUM_CONVS: 4
+    PRIOR_PROB: 0.01
+    SCORE_THRESH_TEST: 0.05
+    SMOOTH_L1_LOSS_BETA: 0.1
+    TOPK_CANDIDATES_TEST: 1000
+  ROI_BOX_CASCADE_HEAD:
+    BBOX_REG_WEIGHTS: ((10.0, 10.0, 5.0, 5.0), (20.0, 20.0, 10.0, 10.0), (30.0, 30.0, 15.0, 15.0))
+    IOUS: (0.5, 0.6, 0.7)
+  ROI_BOX_HEAD:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (10.0, 10.0, 5.0, 5.0)
+    CLS_AGNOSTIC_BBOX_REG: False
+    CONV_DIM: 256
+    FC_DIM: 1024
+    NAME: 
+    NORM: 
+    NUM_CONV: 0
+    NUM_FC: 0
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+    SMOOTH_L1_BETA: 0.0
+    TRAIN_ON_PRED_BOXES: False
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 128
+    IN_FEATURES: ['res2', 'res3', 'res4']
+    IOU_LABELS: [0, 1]
+    IOU_THRESHOLDS: [0.5]
+    NAME: FsodRes5ROIHeads
+    NMS_THRESH_TEST: 0.5
+    NUM_CLASSES: 1
+    POSITIVE_FRACTION: 0.5
+    PROPOSAL_APPEND_GT: True
+    SCORE_THRESH_TEST: 0.05
+  ROI_KEYPOINT_HEAD:
+    CONV_DIMS: (512, 512, 512, 512, 512, 512, 512, 512)
+    LOSS_WEIGHT: 1.0
+    MIN_KEYPOINTS_PER_IMAGE: 1
+    NAME: KRCNNConvDeconvUpsampleHead
+    NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS: True
+    NUM_KEYPOINTS: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  ROI_MASK_HEAD:
+    CLS_AGNOSTIC_MASK: False
+    CONV_DIM: 256
+    NAME: MaskRCNNConvUpsampleHead
+    NORM: 
+    NUM_CONV: 0
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  RPN:
+    BATCH_SIZE_PER_IMAGE: 256
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: (1.0, 1.0, 1.0, 1.0)
+    BOUNDARY_THRESH: -1
+    HEAD_NAME: StandardRPNHead
+    IN_FEATURES: ['res4']
+    IOU_LABELS: [0, -1, 1]
+    IOU_THRESHOLDS: [0.3, 0.7]
+    LOSS_WEIGHT: 1.0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOPK_TEST: 100
+    POST_NMS_TOPK_TRAIN: 2000
+    PRE_NMS_TOPK_TEST: 6000
+    PRE_NMS_TOPK_TRAIN: 12000
+    SMOOTH_L1_BETA: 0.0
+  SEM_SEG_HEAD:
+    COMMON_STRIDE: 4
+    CONVS_DIM: 128
+    IGNORE_VALUE: 255
+    IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
+    LOSS_WEIGHT: 1.0
+    NAME: SemSegFPNHead
+    NORM: GN
+    NUM_CLASSES: 54
+  WEIGHTS: ./output/50_old/R_50_C4_1x/model_final.pth
+OUTPUT_DIR: ./output/fsod/test_dir/R_101_C4_1x_subt/3shot
+SEED: 1
+SOLVER:
+  BACKBONE_LR_FACTOR: 0.5
+  BASE_LR: 0.0
+  BIAS_LR_FACTOR: 1.0
+  CHECKPOINT_PERIOD: 8000
+  CHECKPOINT_PERIOD_EVA: 500
+  CLIP_GRADIENTS:
+    CLIP_TYPE: value
+    CLIP_VALUE: 1.0
+    ENABLED: False
+    NORM_TYPE: 2.0
+  GAMMA: 0.1
+  HEAD_LR_FACTOR: 2.0
+  IMS_PER_BATCH: 4
+  LR_SCHEDULER_NAME: WarmupMultiStepLR
+  MAX_ITER: 3000
+  MOMENTUM: 0.9
+  NESTEROV: False
+  REFERENCE_WORLD_SIZE: 0
+  START_SAVE_ITER: 72000
+  STEPS: (2000, 3000)
+  WARMUP_FACTOR: 0.1
+  WARMUP_ITERS: 200
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+  WEIGHT_DECAY_NORM: 0.0
+TEST:
+  AUG:
+    ENABLED: False
+    FLIP: True
+    MAX_SIZE: 4000
+    MIN_SIZES: (400, 500, 600, 700, 800, 900, 1000, 1100, 1200)
+  DETECTIONS_PER_IMAGE: 100
+  EVAL_PERIOD: 0
+  EXPECTED_RESULTS: []
+  KEYPOINT_OKS_SIGMAS: []
+  PRECISE_BN:
+    ENABLED: False
+    NUM_ITER: 200
+  VIS: True
+  VIS_DIR: vis/val_b_1_3shot
+  VIS_THRESH: 0.8
+VERSION: 2
+VIS_PERIOD: 0
+[32m[11/16 13:20:09 detectron2]: [0mFull config saved to ./output/fsod/test_dir/R_101_C4_1x_subt/3shot/config.yaml
+[32m[11/16 13:20:16 d2.engine.defaults]: [0mModel:
+FsodRCNN(
+  (backbone): ResNet(
+    (stem): BasicStem(
+      (conv1): Conv2d(
+        3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+        (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+      )
+    )
+    (res2): Sequential(
+      (0): BottleneckBlock(
+        (shortcut): Conv2d(
+          64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv1): Conv2d(
+          64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+      )
+      (1): BottleneckBlock(
+        (conv1): Conv2d(
+          256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+      )
+      (2): BottleneckBlock(
+        (conv1): Conv2d(
+          256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+      )
+    )
+    (res3): Sequential(
+      (0): BottleneckBlock(
+        (shortcut): Conv2d(
+          256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+        (conv1): Conv2d(
+          256, 128, kernel_size=(1, 1), stride=(2, 2), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+      )
+      (1): BottleneckBlock(
+        (conv1): Conv2d(
+          512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+      )
+      (2): BottleneckBlock(
+        (conv1): Conv2d(
+          512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+      )
+      (3): BottleneckBlock(
+        (conv1): Conv2d(
+          512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+      )
+    )
+    (res4): Sequential(
+      (0): BottleneckBlock(
+        (shortcut): Conv2d(
+          512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False
+          (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+        )
+        (conv1): Conv2d(
+          512, 256, kernel_size=(1, 1), stride=(2, 2), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+        )
+      )
+      (1): BottleneckBlock(
+        (conv1): Conv2d(
+          1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+        )
+      )
+      (2): BottleneckBlock(
+        (conv1): Conv2d(
+          1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+        )
+      )
+      (3): BottleneckBlock(
+        (conv1): Conv2d(
+          1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+        )
+      )
+      (4): BottleneckBlock(
+        (conv1): Conv2d(
+          1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+        )
+      )
+      (5): BottleneckBlock(
+        (conv1): Conv2d(
+          1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+        )
+      )
+    )
+  )
+  (proposal_generator): FsodRPN(
+    (rpn_head): StandardRPNHead(
+      (conv): Conv2d(1024, 1024, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (objectness_logits): Conv2d(1024, 15, kernel_size=(1, 1), stride=(1, 1))
+      (anchor_deltas): Conv2d(1024, 60, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (anchor_generator): DefaultAnchorGenerator(
+      (cell_anchors): BufferList()
+    )
+  )
+  (roi_heads): FsodRes5ROIHeads(
+    (res5): Sequential(
+      (0): BottleneckBlock(
+        (shortcut): Conv2d(
+          1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False
+          (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+        )
+        (conv1): Conv2d(
+          1024, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+        )
+      )
+      (1): BottleneckBlock(
+        (conv1): Conv2d(
+          2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+        )
+      )
+      (2): BottleneckBlock(
+        (conv1): Conv2d(
+          2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+        (conv2): Conv2d(
+          512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+        )
+        (conv3): Conv2d(
+          512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+          (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+        )
+      )
+    )
+    (box_predictor): FsodFastRCNNOutputLayers(
+      (locator): LocatorNet(
+        (support_fc): Sequential(
+          (0): Linear(in_features=49, out_features=2048, bias=True)
+          (1): Linear(in_features=2048, out_features=1, bias=True)
+        )
+        (conv1): Sequential(
+          (0): Conv2d(2048, 2048, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+        (mlp): Sequential(
+          (0): Linear(in_features=100352, out_features=1024, bias=True)
+          (1): ReLU(inplace=True)
+          (2): Linear(in_features=1024, out_features=1024, bias=True)
+          (3): ReLU(inplace=True)
+        )
+        (loc_fc): Linear(in_features=1024, out_features=4, bias=True)
+      )
+      (conv_1): Conv2d(4096, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (conv_2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), bias=False)
+      (conv_3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (cls_score_pr): Linear(in_features=2048, out_features=2, bias=True)
+      (conv_cor): Conv2d(2048, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (cls_score_cor): Linear(in_features=2048, out_features=2, bias=True)
+      (fc_1): Linear(in_features=4096, out_features=2048, bias=True)
+      (fc_2): Linear(in_features=2048, out_features=2048, bias=True)
+      (cls_score_fc): Linear(in_features=2048, out_features=2, bias=True)
+      (avgpool): AvgPool2d(kernel_size=3, stride=1, padding=0)
+      (avgpool_fc): AvgPool2d(kernel_size=7, stride=7, padding=0)
+    )
+  )
+  (fuser): FuseNet(
+    (conv1): Sequential(
+      (0): Conv2d(2048, 2048, kernel_size=(1, 1), stride=(1, 1))
+      (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+    )
+    (conv2): Sequential(
+      (0): Conv2d(4096, 1024, kernel_size=(1, 1), stride=(1, 1))
+      (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+    )
+    (dw_conv): Sequential(
+      (0): Conv2d(4096, 1024, kernel_size=(1, 1), stride=(1, 1), groups=2)
+      (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+    )
+    (mlp): Sequential(
+      (0): Linear(in_features=1024, out_features=1024, bias=True)
+      (1): ReLU(inplace=True)
+      (2): Linear(in_features=1024, out_features=1, bias=True)
+      (3): ReLU(inplace=True)
+      (4): Softmax(dim=0)
+    )
+  )
+  (apn): APN(
+    (r1): Interp(
+      (conv): Sequential(
+        (0): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+    (gconv1): GConv(
+      (conv_g): Sequential(
+        (0): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1))
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (conv): Sequential(
+        (0): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1), groups=2)
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+    (r3): Interp(
+      (conv): Sequential(
+        (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(1, 1))
+        (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+  )
+)
+[32m[11/16 13:20:16 fvcore.common.checkpoint]: [0m[Checkpointer] Loading from ./output/50_old/R_50_C4_1x/model_final.pth ...
+[32m[11/16 13:20:17 d2.data.datasets.coco]: [0mLoaded 2088 images in COCO format from datasets/SUBT/use/val_g_12/new_annotations/val_g_12.json
+[32m[11/16 13:20:17 d2.data.build]: [0mDistribution of instances among all 10 categories:
+[36m|  category   | #instances   |  category  | #instances   |   category    | #instances   |
+|:-----------:|:-------------|:----------:|:-------------|:-------------:|:-------------|
+|   backpac   | 223          |    rop     | 0            |      ven      | 0            |
+|    helme    | 0            |    dril    | 352          | fire exting.. | 667          |
+| helmet-ligh | 0            |  survivo   | 972          |   cell phon   | 0            |
+|     cub     | 0            |            |              |               |              |
+|    total    | 2214         |            |              |               |              |[0m
+[32m[11/16 13:20:17 d2.data.common]: [0mSerializing 2088 elements to byte tensors and concatenating them all ...
+[32m[11/16 13:20:17 d2.data.common]: [0mSerialized dataset takes 0.50 MiB
+[32m[11/16 13:20:17 d2.data.dataset_mapper]: [0mAugmentations used in training: [ResizeShortestEdge(short_edge_length=(600, 600), max_size=1000, sample_style='choice')]
+[32m[11/16 13:20:17 d2.evaluation.evaluator]: [0mStart inference on 2088 images
+[32m[11/16 13:20:22 d2.evaluation.evaluator]: [0mInference done 11/2088. 0.2480 s / img. ETA=0:10:38
+[32m[11/16 13:20:27 d2.evaluation.evaluator]: [0mInference done 22/2088. 0.2506 s / img. ETA=0:14:41
+[32m[11/16 13:20:32 d2.evaluation.evaluator]: [0mInference done 32/2088. 0.2494 s / img. ETA=0:15:55
+[32m[11/16 13:20:38 d2.evaluation.evaluator]: [0mInference done 43/2088. 0.2484 s / img. ETA=0:16:01
+[32m[11/16 13:20:43 d2.evaluation.evaluator]: [0mInference done 55/2088. 0.2486 s / img. ETA=0:15:34
+[32m[11/16 13:20:48 d2.evaluation.evaluator]: [0mInference done 67/2088. 0.2482 s / img. ETA=0:15:14
+[32m[11/16 13:20:53 d2.evaluation.evaluator]: [0mInference done 79/2088. 0.2482 s / img. ETA=0:15:08
+[32m[11/16 13:20:58 d2.evaluation.evaluator]: [0mInference done 91/2088. 0.2482 s / img. ETA=0:14:55
+[32m[11/16 13:21:04 d2.evaluation.evaluator]: [0mInference done 103/2088. 0.2482 s / img. ETA=0:14:45
+[32m[11/16 13:21:09 d2.evaluation.evaluator]: [0mInference done 115/2088. 0.2485 s / img. ETA=0:14:38
+[32m[11/16 13:21:14 d2.evaluation.evaluator]: [0mInference done 127/2088. 0.2486 s / img. ETA=0:14:31
+[32m[11/16 13:21:19 d2.evaluation.evaluator]: [0mInference done 136/2088. 0.2499 s / img. ETA=0:14:44
+[32m[11/16 13:21:26 d2.evaluation.evaluator]: [0mInference done 147/2088. 0.2498 s / img. ETA=0:15:07
+[32m[11/16 13:21:31 d2.evaluation.evaluator]: [0mInference done 161/2088. 0.2499 s / img. ETA=0:14:43
+[32m[11/16 13:21:37 d2.evaluation.evaluator]: [0mInference done 178/2088. 0.2502 s / img. ETA=0:14:07
+[32m[11/16 13:21:42 d2.evaluation.evaluator]: [0mInference done 192/2088. 0.2538 s / img. ETA=0:13:50
+[32m[11/16 13:21:47 d2.evaluation.evaluator]: [0mInference done 206/2088. 0.2570 s / img. ETA=0:13:35
+[32m[11/16 13:21:52 d2.evaluation.evaluator]: [0mInference done 220/2088. 0.2594 s / img. ETA=0:13:21
+[32m[11/16 13:21:57 d2.evaluation.evaluator]: [0mInference done 236/2088. 0.2592 s / img. ETA=0:13:01
+[32m[11/16 13:22:02 d2.evaluation.evaluator]: [0mInference done 253/2088. 0.2582 s / img. ETA=0:12:39
+[32m[11/16 13:22:08 d2.evaluation.evaluator]: [0mInference done 269/2088. 0.2577 s / img. ETA=0:12:22
+[32m[11/16 13:22:13 d2.evaluation.evaluator]: [0mInference done 285/2088. 0.2574 s / img. ETA=0:12:06
+[32m[11/16 13:22:18 d2.evaluation.evaluator]: [0mInference done 300/2088. 0.2585 s / img. ETA=0:11:55
+[32m[11/16 13:22:23 d2.evaluation.evaluator]: [0mInference done 316/2088. 0.2581 s / img. ETA=0:11:42
+[32m[11/16 13:22:28 d2.evaluation.evaluator]: [0mInference done 332/2088. 0.2578 s / img. ETA=0:11:29
+[32m[11/16 13:22:34 d2.evaluation.evaluator]: [0mInference done 348/2088. 0.2579 s / img. ETA=0:11:18
+[32m[11/16 13:22:39 d2.evaluation.evaluator]: [0mInference done 363/2088. 0.2583 s / img. ETA=0:11:09
+[32m[11/16 13:22:44 d2.evaluation.evaluator]: [0mInference done 377/2088. 0.2595 s / img. ETA=0:11:03
+[32m[11/16 13:22:49 d2.evaluation.evaluator]: [0mInference done 391/2088. 0.2606 s / img. ETA=0:10:58
+[32m[11/16 13:22:55 d2.evaluation.evaluator]: [0mInference done 405/2088. 0.2616 s / img. ETA=0:10:51
+[32m[11/16 13:23:00 d2.evaluation.evaluator]: [0mInference done 418/2088. 0.2625 s / img. ETA=0:10:46
+[32m[11/16 13:23:05 d2.evaluation.evaluator]: [0mInference done 432/2088. 0.2628 s / img. ETA=0:10:40
+[32m[11/16 13:23:10 d2.evaluation.evaluator]: [0mInference done 446/2088. 0.2637 s / img. ETA=0:10:34
+[32m[11/16 13:23:15 d2.evaluation.evaluator]: [0mInference done 462/2088. 0.2637 s / img. ETA=0:10:25
+[32m[11/16 13:23:21 d2.evaluation.evaluator]: [0mInference done 478/2088. 0.2633 s / img. ETA=0:10:15
+[32m[11/16 13:23:26 d2.evaluation.evaluator]: [0mInference done 494/2088. 0.2630 s / img. ETA=0:10:06
+[32m[11/16 13:23:31 d2.evaluation.evaluator]: [0mInference done 507/2088. 0.2628 s / img. ETA=0:10:02
+[32m[11/16 13:23:36 d2.evaluation.evaluator]: [0mInference done 517/2088. 0.2631 s / img. ETA=0:10:02
+[32m[11/16 13:23:41 d2.evaluation.evaluator]: [0mInference done 527/2088. 0.2634 s / img. ETA=0:10:02
+[32m[11/16 13:23:46 d2.evaluation.evaluator]: [0mInference done 537/2088. 0.2634 s / img. ETA=0:10:02
+[32m[11/16 13:23:52 d2.evaluation.evaluator]: [0mInference done 548/2088. 0.2637 s / img. ETA=0:10:01
+[32m[11/16 13:23:57 d2.evaluation.evaluator]: [0mInference done 559/2088. 0.2636 s / img. ETA=0:09:59
+[32m[11/16 13:24:02 d2.evaluation.evaluator]: [0mInference done 571/2088. 0.2633 s / img. ETA=0:09:55
+[32m[11/16 13:24:07 d2.evaluation.evaluator]: [0mInference done 582/2088. 0.2631 s / img. ETA=0:09:53
+[32m[11/16 13:24:13 d2.evaluation.evaluator]: [0mInference done 594/2088. 0.2630 s / img. ETA=0:09:50
+[32m[11/16 13:24:18 d2.evaluation.evaluator]: [0mInference done 604/2088. 0.2632 s / img. ETA=0:09:49
+[32m[11/16 13:24:24 d2.evaluation.evaluator]: [0mInference done 614/2088. 0.2634 s / img. ETA=0:09:50
+[32m[11/16 13:24:29 d2.evaluation.evaluator]: [0mInference done 623/2088. 0.2637 s / img. ETA=0:09:50
+[32m[11/16 13:24:34 d2.evaluation.evaluator]: [0mInference done 633/2088. 0.2640 s / img. ETA=0:09:48
+[32m[11/16 13:24:39 d2.evaluation.evaluator]: [0mInference done 644/2088. 0.2645 s / img. ETA=0:09:45
+[32m[11/16 13:24:44 d2.evaluation.evaluator]: [0mInference done 658/2088. 0.2651 s / img. ETA=0:09:39
+[32m[11/16 13:24:50 d2.evaluation.evaluator]: [0mInference done 672/2088. 0.2660 s / img. ETA=0:09:32
+[32m[11/16 13:24:55 d2.evaluation.evaluator]: [0mInference done 688/2088. 0.2657 s / img. ETA=0:09:23
+[32m[11/16 13:25:00 d2.evaluation.evaluator]: [0mInference done 704/2088. 0.2654 s / img. ETA=0:09:14
+[32m[11/16 13:25:05 d2.evaluation.evaluator]: [0mInference done 720/2088. 0.2652 s / img. ETA=0:09:05
+[32m[11/16 13:25:10 d2.evaluation.evaluator]: [0mInference done 735/2088. 0.2653 s / img. ETA=0:08:58
+[32m[11/16 13:25:15 d2.evaluation.evaluator]: [0mInference done 749/2088. 0.2659 s / img. ETA=0:08:51
+[32m[11/16 13:25:20 d2.evaluation.evaluator]: [0mInference done 763/2088. 0.2662 s / img. ETA=0:08:45
+[32m[11/16 13:25:26 d2.evaluation.evaluator]: [0mInference done 777/2088. 0.2665 s / img. ETA=0:08:39
+[32m[11/16 13:25:31 d2.evaluation.evaluator]: [0mInference done 791/2088. 0.2669 s / img. ETA=0:08:32
+[32m[11/16 13:25:36 d2.evaluation.evaluator]: [0mInference done 807/2088. 0.2666 s / img. ETA=0:08:24
+[32m[11/16 13:25:41 d2.evaluation.evaluator]: [0mInference done 823/2088. 0.2664 s / img. ETA=0:08:16
+[32m[11/16 13:25:46 d2.evaluation.evaluator]: [0mInference done 839/2088. 0.2663 s / img. ETA=0:08:08
+[32m[11/16 13:25:52 d2.evaluation.evaluator]: [0mInference done 855/2088. 0.2662 s / img. ETA=0:08:01
+[32m[11/16 13:25:57 d2.evaluation.evaluator]: [0mInference done 867/2088. 0.2665 s / img. ETA=0:07:57
+[32m[11/16 13:26:02 d2.evaluation.evaluator]: [0mInference done 878/2088. 0.2667 s / img. ETA=0:07:54
+[32m[11/16 13:26:08 d2.evaluation.evaluator]: [0mInference done 889/2088. 0.2668 s / img. ETA=0:07:51
+[32m[11/16 13:26:13 d2.evaluation.evaluator]: [0mInference done 901/2088. 0.2666 s / img. ETA=0:07:47
+[32m[11/16 13:26:18 d2.evaluation.evaluator]: [0mInference done 913/2088. 0.2663 s / img. ETA=0:07:43
+[32m[11/16 13:26:23 d2.evaluation.evaluator]: [0mInference done 922/2088. 0.2662 s / img. ETA=0:07:41
+[32m[11/16 13:26:28 d2.evaluation.evaluator]: [0mInference done 933/2088. 0.2662 s / img. ETA=0:07:38
+[32m[11/16 13:26:33 d2.evaluation.evaluator]: [0mInference done 943/2088. 0.2662 s / img. ETA=0:07:35
+[32m[11/16 13:26:38 d2.evaluation.evaluator]: [0mInference done 951/2088. 0.2664 s / img. ETA=0:07:35
+[32m[11/16 13:26:44 d2.evaluation.evaluator]: [0mInference done 961/2088. 0.2664 s / img. ETA=0:07:32
+[32m[11/16 13:26:49 d2.evaluation.evaluator]: [0mInference done 971/2088. 0.2663 s / img. ETA=0:07:29
+[32m[11/16 13:26:54 d2.evaluation.evaluator]: [0mInference done 984/2088. 0.2661 s / img. ETA=0:07:24
+[32m[11/16 13:26:59 d2.evaluation.evaluator]: [0mInference done 999/2088. 0.2660 s / img. ETA=0:07:16
+[32m[11/16 13:27:04 d2.evaluation.evaluator]: [0mInference done 1015/2088. 0.2658 s / img. ETA=0:07:09
+[32m[11/16 13:27:09 d2.evaluation.evaluator]: [0mInference done 1028/2088. 0.2662 s / img. ETA=0:07:03
+[32m[11/16 13:27:14 d2.evaluation.evaluator]: [0mInference done 1042/2088. 0.2665 s / img. ETA=0:06:58
+[32m[11/16 13:27:19 d2.evaluation.evaluator]: [0mInference done 1055/2088. 0.2669 s / img. ETA=0:06:52
+[32m[11/16 13:27:25 d2.evaluation.evaluator]: [0mInference done 1069/2088. 0.2671 s / img. ETA=0:06:47
+[32m[11/16 13:27:30 d2.evaluation.evaluator]: [0mInference done 1083/2088. 0.2674 s / img. ETA=0:06:41
+[32m[11/16 13:27:35 d2.evaluation.evaluator]: [0mInference done 1096/2088. 0.2679 s / img. ETA=0:06:36
+[32m[11/16 13:27:40 d2.evaluation.evaluator]: [0mInference done 1109/2088. 0.2682 s / img. ETA=0:06:30
+[32m[11/16 13:27:46 d2.evaluation.evaluator]: [0mInference done 1123/2088. 0.2685 s / img. ETA=0:06:24
+[32m[11/16 13:27:51 d2.evaluation.evaluator]: [0mInference done 1139/2088. 0.2683 s / img. ETA=0:06:17
+[32m[11/16 13:27:56 d2.evaluation.evaluator]: [0mInference done 1155/2088. 0.2681 s / img. ETA=0:06:10
+[32m[11/16 13:28:02 d2.evaluation.evaluator]: [0mInference done 1171/2088. 0.2680 s / img. ETA=0:06:03
+[32m[11/16 13:28:07 d2.evaluation.evaluator]: [0mInference done 1186/2088. 0.2680 s / img. ETA=0:05:56
+[32m[11/16 13:28:12 d2.evaluation.evaluator]: [0mInference done 1200/2088. 0.2682 s / img. ETA=0:05:50
+[32m[11/16 13:28:17 d2.evaluation.evaluator]: [0mInference done 1214/2088. 0.2683 s / img. ETA=0:05:45
+[32m[11/16 13:28:23 d2.evaluation.evaluator]: [0mInference done 1228/2088. 0.2686 s / img. ETA=0:05:39
+[32m[11/16 13:28:28 d2.evaluation.evaluator]: [0mInference done 1242/2088. 0.2690 s / img. ETA=0:05:33
+[32m[11/16 13:28:33 d2.evaluation.evaluator]: [0mInference done 1256/2088. 0.2691 s / img. ETA=0:05:28
+[32m[11/16 13:28:38 d2.evaluation.evaluator]: [0mInference done 1270/2088. 0.2693 s / img. ETA=0:05:22
+[32m[11/16 13:28:43 d2.evaluation.evaluator]: [0mInference done 1284/2088. 0.2695 s / img. ETA=0:05:16
+[32m[11/16 13:28:49 d2.evaluation.evaluator]: [0mInference done 1298/2088. 0.2698 s / img. ETA=0:05:10
+[32m[11/16 13:28:54 d2.evaluation.evaluator]: [0mInference done 1312/2088. 0.2700 s / img. ETA=0:05:05
+[32m[11/16 13:28:59 d2.evaluation.evaluator]: [0mInference done 1326/2088. 0.2703 s / img. ETA=0:04:59
+[32m[11/16 13:29:04 d2.evaluation.evaluator]: [0mInference done 1340/2088. 0.2704 s / img. ETA=0:04:53
+[32m[11/16 13:29:10 d2.evaluation.evaluator]: [0mInference done 1354/2088. 0.2705 s / img. ETA=0:04:48
+[32m[11/16 13:29:15 d2.evaluation.evaluator]: [0mInference done 1370/2088. 0.2704 s / img. ETA=0:04:41
+[32m[11/16 13:29:20 d2.evaluation.evaluator]: [0mInference done 1386/2088. 0.2701 s / img. ETA=0:04:34
+[32m[11/16 13:29:25 d2.evaluation.evaluator]: [0mInference done 1402/2088. 0.2699 s / img. ETA=0:04:27
+[32m[11/16 13:29:30 d2.evaluation.evaluator]: [0mInference done 1418/2088. 0.2697 s / img. ETA=0:04:21
+[32m[11/16 13:29:35 d2.evaluation.evaluator]: [0mInference done 1433/2088. 0.2696 s / img. ETA=0:04:14
+[32m[11/16 13:29:41 d2.evaluation.evaluator]: [0mInference done 1449/2088. 0.2694 s / img. ETA=0:04:08
+[32m[11/16 13:29:46 d2.evaluation.evaluator]: [0mInference done 1452/2088. 0.2694 s / img. ETA=0:04:08
+[32m[11/16 13:29:51 d2.evaluation.evaluator]: [0mInference done 1461/2088. 0.2694 s / img. ETA=0:04:05
+[32m[11/16 13:29:56 d2.evaluation.evaluator]: [0mInference done 1472/2088. 0.2693 s / img. ETA=0:04:01
+[32m[11/16 13:30:02 d2.evaluation.evaluator]: [0mInference done 1479/2088. 0.2692 s / img. ETA=0:04:00
+[32m[11/16 13:30:07 d2.evaluation.evaluator]: [0mInference done 1491/2088. 0.2691 s / img. ETA=0:03:55
+[32m[11/16 13:30:14 d2.evaluation.evaluator]: [0mInference done 1502/2088. 0.2690 s / img. ETA=0:03:52
+[32m[11/16 13:30:19 d2.evaluation.evaluator]: [0mInference done 1514/2088. 0.2688 s / img. ETA=0:03:47
+[32m[11/16 13:30:25 d2.evaluation.evaluator]: [0mInference done 1519/2088. 0.2687 s / img. ETA=0:03:47
+[32m[11/16 13:30:30 d2.evaluation.evaluator]: [0mInference done 1529/2088. 0.2686 s / img. ETA=0:03:43
+[32m[11/16 13:30:35 d2.evaluation.evaluator]: [0mInference done 1540/2088. 0.2686 s / img. ETA=0:03:39
+[32m[11/16 13:30:41 d2.evaluation.evaluator]: [0mInference done 1549/2088. 0.2685 s / img. ETA=0:03:36
+[32m[11/16 13:30:46 d2.evaluation.evaluator]: [0mInference done 1561/2088. 0.2683 s / img. ETA=0:03:32
+[32m[11/16 13:30:51 d2.evaluation.evaluator]: [0mInference done 1572/2088. 0.2682 s / img. ETA=0:03:27
+[32m[11/16 13:30:57 d2.evaluation.evaluator]: [0mInference done 1582/2088. 0.2682 s / img. ETA=0:03:24
+[32m[11/16 13:31:02 d2.evaluation.evaluator]: [0mInference done 1592/2088. 0.2682 s / img. ETA=0:03:20
+[32m[11/16 13:31:07 d2.evaluation.evaluator]: [0mInference done 1603/2088. 0.2682 s / img. ETA=0:03:16
+[32m[11/16 13:31:13 d2.evaluation.evaluator]: [0mInference done 1611/2088. 0.2682 s / img. ETA=0:03:13
+[32m[11/16 13:31:18 d2.evaluation.evaluator]: [0mInference done 1622/2088. 0.2682 s / img. ETA=0:03:09
+[32m[11/16 13:31:23 d2.evaluation.evaluator]: [0mInference done 1636/2088. 0.2683 s / img. ETA=0:03:03
+[32m[11/16 13:31:28 d2.evaluation.evaluator]: [0mInference done 1649/2088. 0.2685 s / img. ETA=0:02:58
+[32m[11/16 13:31:33 d2.evaluation.evaluator]: [0mInference done 1663/2088. 0.2686 s / img. ETA=0:02:52
+[32m[11/16 13:31:38 d2.evaluation.evaluator]: [0mInference done 1677/2088. 0.2686 s / img. ETA=0:02:46
+[32m[11/16 13:31:44 d2.evaluation.evaluator]: [0mInference done 1691/2088. 0.2687 s / img. ETA=0:02:41
+[32m[11/16 13:31:49 d2.evaluation.evaluator]: [0mInference done 1704/2088. 0.2689 s / img. ETA=0:02:35
+[32m[11/16 13:31:54 d2.evaluation.evaluator]: [0mInference done 1718/2088. 0.2690 s / img. ETA=0:02:29
+[32m[11/16 13:31:59 d2.evaluation.evaluator]: [0mInference done 1732/2088. 0.2692 s / img. ETA=0:02:24
+[32m[11/16 13:32:04 d2.evaluation.evaluator]: [0mInference done 1746/2088. 0.2694 s / img. ETA=0:02:18
+[32m[11/16 13:32:09 d2.evaluation.evaluator]: [0mInference done 1760/2088. 0.2695 s / img. ETA=0:02:12
+[32m[11/16 13:32:15 d2.evaluation.evaluator]: [0mInference done 1774/2088. 0.2697 s / img. ETA=0:02:06
+[32m[11/16 13:32:20 d2.evaluation.evaluator]: [0mInference done 1788/2088. 0.2698 s / img. ETA=0:02:01
+[32m[11/16 13:32:25 d2.evaluation.evaluator]: [0mInference done 1802/2088. 0.2701 s / img. ETA=0:01:55
+[32m[11/16 13:32:31 d2.evaluation.evaluator]: [0mInference done 1816/2088. 0.2702 s / img. ETA=0:01:49
+[32m[11/16 13:32:36 d2.evaluation.evaluator]: [0mInference done 1829/2088. 0.2705 s / img. ETA=0:01:44
+[32m[11/16 13:32:41 d2.evaluation.evaluator]: [0mInference done 1843/2088. 0.2706 s / img. ETA=0:01:38
+[32m[11/16 13:32:46 d2.evaluation.evaluator]: [0mInference done 1857/2088. 0.2707 s / img. ETA=0:01:33
+[32m[11/16 13:32:51 d2.evaluation.evaluator]: [0mInference done 1871/2088. 0.2708 s / img. ETA=0:01:27
+[32m[11/16 13:32:57 d2.evaluation.evaluator]: [0mInference done 1885/2088. 0.2710 s / img. ETA=0:01:21
+[32m[11/16 13:33:02 d2.evaluation.evaluator]: [0mInference done 1899/2088. 0.2711 s / img. ETA=0:01:16
+[32m[11/16 13:33:07 d2.evaluation.evaluator]: [0mInference done 1913/2088. 0.2712 s / img. ETA=0:01:10
+[32m[11/16 13:33:12 d2.evaluation.evaluator]: [0mInference done 1927/2088. 0.2713 s / img. ETA=0:01:04
+[32m[11/16 13:33:17 d2.evaluation.evaluator]: [0mInference done 1941/2088. 0.2714 s / img. ETA=0:00:59
+[32m[11/16 13:33:23 d2.evaluation.evaluator]: [0mInference done 1955/2088. 0.2715 s / img. ETA=0:00:53
+[32m[11/16 13:33:28 d2.evaluation.evaluator]: [0mInference done 1969/2088. 0.2716 s / img. ETA=0:00:47
+[32m[11/16 13:33:33 d2.evaluation.evaluator]: [0mInference done 1983/2088. 0.2717 s / img. ETA=0:00:42
+[32m[11/16 13:33:38 d2.evaluation.evaluator]: [0mInference done 1997/2088. 0.2719 s / img. ETA=0:00:36
+[32m[11/16 13:33:43 d2.evaluation.evaluator]: [0mInference done 2012/2088. 0.2720 s / img. ETA=0:00:30
+[32m[11/16 13:33:48 d2.evaluation.evaluator]: [0mInference done 2027/2088. 0.2721 s / img. ETA=0:00:24
+[32m[11/16 13:33:54 d2.evaluation.evaluator]: [0mInference done 2042/2088. 0.2721 s / img. ETA=0:00:18
+[32m[11/16 13:33:59 d2.evaluation.evaluator]: [0mInference done 2056/2088. 0.2722 s / img. ETA=0:00:12
+[32m[11/16 13:34:04 d2.evaluation.evaluator]: [0mInference done 2070/2088. 0.2723 s / img. ETA=0:00:07
+[32m[11/16 13:34:09 d2.evaluation.evaluator]: [0mInference done 2085/2088. 0.2724 s / img. ETA=0:00:01
+[32m[11/16 13:34:10 d2.evaluation.evaluator]: [0mTotal inference time: 0:13:50.424399 (0.398667 s / img per device, on 1 devices)
+[32m[11/16 13:34:10 d2.evaluation.evaluator]: [0mTotal inference pure compute time: 0:09:27 (0.272388 s / img per device, on 1 devices)
+[32m[11/16 13:34:11 fewx.evaluation.coco_evaluation]: [0mPreparing results for COCO format ...
+[32m[11/16 13:34:11 fewx.evaluation.coco_evaluation]: [0mSaving results to ./output/fsod/test_dir/R_101_C4_1x_subt/3shot/inference/coco_instances_results.json
+[32m[11/16 13:34:11 fewx.evaluation.coco_evaluation]: [0mEvaluating predictions ...
+Loading and preparing results...
+DONE (t=0.27s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+COCOeval_opt.evaluate() finished in 1.48 seconds.
+Accumulating evaluation results...
+COCOeval_opt.accumulate() finished in 0.26 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.205
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.424
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.182
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.036
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.174
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.238
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.328
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.404
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.406
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.038
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.301
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.470
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for bbox: 
+|   AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:------:|:------:|:------:|:-----:|:------:|:------:|
+| 20.474 | 42.361 | 18.202 | 3.556 | 17.382 | 23.804 |
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for VOC 20 categories =======> AP  : 0.00
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for VOC 20 categories =======> AP50: 0.00
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for VOC 20 categories =======> AP75: 0.00
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for VOC 20 categories =======> APs : 0.00
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for VOC 20 categories =======> APm : 0.00
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for VOC 20 categories =======> APl : 0.00
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for Non VOC 60 categories =======> AP  : nan
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for Non VOC 60 categories =======> AP50: nan
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for Non VOC 60 categories =======> AP75: nan
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for Non VOC 60 categories =======> APs : nan
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for Non VOC 60 categories =======> APm : nan
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mEvaluation results for Non VOC 60 categories =======> APl : nan
+[32m[11/16 13:34:13 fewx.evaluation.coco_evaluation]: [0mPer-category bbox AP: 
+| category    | AP     | category   | AP     | category         | AP     |
+|:------------|:-------|:-----------|:-------|:-----------------|:-------|
+| backpac     | 32.118 | rop        | nan    | ven              | nan    |
+| helme       | nan    | dril       | 15.365 | fire extinguishe | 26.021 |
+| helmet-ligh | nan    | survivo    | 8.390  | cell phon        | nan    |
+| cub         | nan    |            |        |                  |        |
+[32m[11/16 13:34:13 d2.engine.defaults]: [0mEvaluation results for val_g_12 in csv format:
+[32m[11/16 13:34:13 d2.evaluation.testing]: [0mcopypaste: Task: bbox
+[32m[11/16 13:34:13 d2.evaluation.testing]: [0mcopypaste: AP,AP50,AP75,APs,APm,APl
+[32m[11/16 13:34:13 d2.evaluation.testing]: [0mcopypaste: 20.4736,42.3607,18.2021,3.5559,17.3815,23.8040
+/usr/local/miniconda/envs/fewx/lib/python3.6/site-packages/torch/nn/functional.py:2973: UserWarning: Default upsampling behavior when mode=bicubic is changed to align_corners=False since 0.4.0. Please specify align_corners=True if the old behavior is desired. See the documentation of nn.Upsample for details.
+  "See the documentation of nn.Upsample for details.".format(mode))
