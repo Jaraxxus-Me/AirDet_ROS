@@ -128,15 +128,13 @@ docker pull bowenli1024/airdet-ros:v1
 
 Clone the package to the ROS workspace using git tools. The folder should be:
 
+```shell
 AirDet_ROS/
-
---build/
-
---devel/
-
---src/
-
-----airdet_ros/
+   build/
+   devel/
+   src/
+      airdet_ros/
+```
 
 ```bash
 git clone https://github.com/Jaraxxus-Me/airdet_ros.git
